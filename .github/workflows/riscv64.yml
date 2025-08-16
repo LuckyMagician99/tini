@@ -1,8 +1,8 @@
 name: riscv64 build (QEMU)
 
 on:
-  push: { branches: [ ci/riscv64-qemu ] }   # 只有你这个分支 push 才触发
-  workflow_dispatch:                        # 也支持手动触发
+  push: { branches: [ ci/riscv64-qemu ] }   
+  workflow_dispatch:                        
 
 jobs:
   build-riscv64:
@@ -22,7 +22,7 @@ jobs:
             export SOURCE_DIR=${{ github.workspace }}
             export DIST_DIR=${{ github.workspace }}/dist
             export BUILD_DIR=/tmp/build
-            export ARCH_SUFFIX=riscv64     # 非原生构建必须有后缀
+            export ARCH_SUFFIX=riscv64     
             chmod +x ci/run_build.sh
             ./ci/run_build.sh
             ls -l dist
