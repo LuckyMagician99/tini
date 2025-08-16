@@ -1,0 +1,36 @@
+name: riscv64 build (QEMU)
+
+on:
+  push: { branches: [ ci/riscv64-qemu ] }   # 只有你这个分支 push 才触发
+  workflow_dispatch:                        # 也支持手动触发
+
+jobs:
+  build-riscv64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build in riscv64 container (Ubuntu 22.04)
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: riscv64
+          distro: ubuntu22.04
+          run: |
+            set -eux
+            apt-get update
+            apt-get install -y --no-install-recommends build-essential cmake git file ca-certificates
+            export SOURCE_DIR=${{ github.workspace }}
+            export DIST_DIR=${{ github.workspace }}/dist
+            export BUILD_DIR=/tmp/build
+            export ARCH_SUFFIX=riscv64     # 非原生构建必须有后缀
+            chmod +x ci/run_build.sh
+            ./ci/run_build.sh
+            ls -l dist
+            file dist/tini-riscv64
+            sha256sum dist/tini-riscv64
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tini-riscv64
+          path: dist/tini-riscv64
