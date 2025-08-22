@@ -1,15 +1,15 @@
 name: riscv64 build (QEMU)
 
 on:
-  push: { branches: [ ci/riscv64-qemu ] }   
-  workflow_dispatch:                        
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-riscv64:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-
       - name: Build in riscv64 container (Ubuntu 22.04)
         uses: uraimo/run-on-arch-action@v2
         with:
@@ -22,15 +22,7 @@ jobs:
             export SOURCE_DIR=${{ github.workspace }}
             export DIST_DIR=${{ github.workspace }}/dist
             export BUILD_DIR=/tmp/build
-            export ARCH_SUFFIX=riscv64     
+            export ARCH_SUFFIX=riscv64
             chmod +x ci/run_build.sh
             ./ci/run_build.sh
-            ls -l dist
             file dist/tini-riscv64
-            sha256sum dist/tini-riscv64
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tini-riscv64
-          path: dist/tini-riscv64
