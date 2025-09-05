@@ -26,3 +26,4 @@ jobs:
             chmod +x ci/run_build.sh
             ./ci/run_build.sh
             file dist/tini-riscv64
+Co-authored-by: <nijincheng@iscas.ac.cn>
